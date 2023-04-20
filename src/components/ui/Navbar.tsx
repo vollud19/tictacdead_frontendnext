@@ -1,42 +1,57 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
+import WebFont from 'webfontloader'
 
-export default function Navbar () {
+import {AiOutlineClose, AiOutlineMenu} from 'react-icons/ai'
+
+const Navbar = () => {
+    const [nav, setNav] = useState(true);
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
+    const handleResize = () => {
+        console.log(window.innerWidth)
+        setScreenWidth(window.innerWidth)
+    }
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize)
+    }, [])
+
+    const handleNav = () => {
+        setNav(!nav);
+    }
+
+    {/*TODO
+    --> Implement Navbar closing when screen adjusts its width*/}
+
     return (
-        <nav className="bg-gray-800">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
-                    <div className="flex items-center">
-                        <div className="flex-shrink-0">
-                            <img className="h-8 w-8" src="/logo.svg" alt="Logo" />
-                        </div>
-                        <div className="hidden md:block">
-                            <div className="ml-10 flex items-baseline space-x-4">
-                                <a href="/" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                                <a href="/" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">About</a>
-                                <a href="/" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Contact</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="-mr-2 flex md:hidden">
-                        <button type="button" className="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
-                            <span className="sr-only">Open main menu</span>
-                            <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                            <svg className="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
+        <div className='flex justify-between items-center h-24 max-w-[1240px] mx-auto px-4 text-white'>
+            <div>{screenWidth}</div>
+            <h1 className='w-full font-redundead md:text-4xl sm:text-2xl text-2xl font-bold text-yellow-700'>TIC·TAC·<span className='text-red-950'>Dead</span></h1>
+            <ul className='hidden md:flex'> {/*}when collapsing the navbar on the top which would also collapse hides*/}
+                <li className='p-4'><a>Home</a></li>
+                <li className='p-4'>Description</li>
+                <li className='p-4'>About</li>
+                <li className='p-2'>
+                    <button
+                        className="whitespace-nowrap break-keep bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-10 border border-gray-400 rounded shadow">
+                        START GAME
+                    </button></li>
+            </ul>
+            <div onClick={handleNav} className='block md:hidden'> {/*}That's for the Icon change*/}
+                {!nav ? <AiOutlineClose size={20}/> : <AiOutlineMenu size={20}/>}
             </div>
-            <div className="md:hidden" id="mobile-menu">
-                <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                    <a href="/" className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Home</a>
-                    <a href="/" className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
-                    <a href="/" className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Contact</a>
-                </div>
+            <div className={
+                !nav ? 'fixed left-0 top-0 w-[60%] h-full border-r border-r-gray-900 bg-[#000300] ease-in-out duration-500': 'fixed left-[-100%]'}>
+                <h1 className='w-full font-redundead md:text-4xl sm:text-2xl text-2xl font-bold text-yellow-700 m-4'>TIC·TAC·<span className='text-red-950'>Dead</span></h1>
+                <ul className='uppercase p-4'>
+                    <li className='p-4 border-b border-gray-600'>Home</li>
+                    <li className='p-4 border-b border-gray-600'>Description</li>
+                    <li className='p-4 border-b border-gray-600'>About</li>
+                    <li className='p-4'>Play</li>
+                </ul>
             </div>
-        </nav>
+        </div>
     );
 }
+
+export default Navbar

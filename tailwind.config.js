@@ -7,6 +7,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      padding: {
+        '1/2': '50%',
+        full: '100%',
+      },
       fontFamily: {
         redundead: 'Redundead'
       },
@@ -14,6 +18,7 @@ module.exports = {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'horror-house': "url('/src/assets/horror-house.jpg')",
       },
     },
   },
