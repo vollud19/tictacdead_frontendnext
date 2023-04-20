@@ -29,12 +29,12 @@ import Footer from "@/components/ui/Footer";
 export default function Home() {
 
     return (
-            <div>
-                <Navbar></Navbar>
-                <Hero></Hero>
-                <Description></Description>
-                <About></About>
-                <Footer></Footer>
-            </div>
+        <div>
+            <Navbar></Navbar>
+            <Hero></Hero>
+            <Description></Description>
+            <About></About>
+            <Footer></Footer>
+        </div>
     )
 }

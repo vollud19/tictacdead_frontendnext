@@ -9,7 +9,7 @@ const Home = () => {
     const router = useRouter();
 
     return (
-        <div className='text-white background-img'>
+        <div id="hero" className='text-white background-img'>
             <div className='bg-black/50'>
                 <div
                     className='max-w-[1100px] mt-[-96px] w-full h-screen mx-auto text-center flex flex-col justify-center'>
