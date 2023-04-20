@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import WebFont from 'webfontloader'
 
+
 import {AiOutlineClose, AiOutlineMenu} from 'react-icons/ai'
 
 const Navbar = () => {

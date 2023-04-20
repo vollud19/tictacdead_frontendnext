@@ -4,7 +4,7 @@ import thinking2 from '../../../public/design-thinking.png'
 
 const Description = () => {
     return (
-        <div className='w-full bg-white py-16 px-4'>
+        <div id="description" className='w-full bg-white py-16 px-4'>
             <div className='max-w-[1240px] mx-auto grid md:grid-cols-2 gap-4'>
                 <img className='w-[400px] mx-auto my-4' src='/TicTacDeadExample.png' alt='/' />
                 <div className='flex flex-col justify-center'>
