@@ -35,7 +35,7 @@ const Navbar = () => {
                 <li className='p-4'><button><Link to="description" spy={true} smooth={true} offset={50} duration={200}>Description</Link></button></li>
                 <li className='p-4'><button><Link to="about" spy={true} smooth={true} offset={50} duration={200}>About</Link></button></li>
                 <li className='p-2'>
-                    <button onClick={() => router.push("/playgame")}
+                    <button onClick={() => router.push("/playerselect")}
                         className="whitespace-nowrap break-keep bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-10 border border-gray-400 rounded shadow">
                         START GAME
                     </button></li>
@@ -50,7 +50,7 @@ const Navbar = () => {
                     <li className='p-4 border-b border-gray-600'><button><Link to="home" spy={true} smooth={true} offset={50} duration={2}>Home</Link></button></li>
                     <li className='p-4 border-b border-gray-600'><button><Link to="description" spy={true} smooth={true} offset={50} duration={200}>Description</Link></button></li>
                     <li className='p-4 border-b border-gray-600'><button><Link to="about" spy={true} smooth={true} offset={50} duration={200}>About</Link></button></li>
-                    <li className='p-4'><button onClick={() => router.push("playgame")}>PLAY</button></li>
+                    <li className='p-4'><button onClick={() => router.push("/playerselect")}>PLAY</button></li>
                 </ul>
             </div>
         </div>

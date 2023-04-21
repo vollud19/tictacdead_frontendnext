@@ -29,8 +29,8 @@ const Home = () => {
                     <p className="md:text-2xl text-xl font-bold text-gray-500">A hardcore version of the most famous
                         game TicTacToe. A strategie game for people who need the next challenge for their mind.</p>
                     <div className='rounded-md font-medium my-6 mx-auto py-4'>
-                        <button onClick={() => router.push('/playgame')} className={styles.button}>
-                            PLAY NOW!
+                        <button onClick={() => router.push('/playerselect')} className={styles.button}>
+                            PLAY
                             <span></span>
                             <span></span>
                             <span></span>
