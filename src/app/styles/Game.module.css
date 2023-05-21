@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'RedUnDead';
+    font-size: smaller;
+    src: url("../../../public/fonts/redundead.ttf");
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
