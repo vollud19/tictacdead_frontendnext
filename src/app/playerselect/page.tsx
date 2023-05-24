@@ -28,9 +28,9 @@ const Page = () => {
         console.log("Die id " + event.currentTarget.id)
         // Für Websocket
         if (id === 'player1') {
-            console.log("Player1 clicked!!!")
+            console.log("Player1 clicked!")
         } else {
-            console.log("Player2 clicked!!!")
+            console.log("Player2 clicked!")
         }
         localStorage.setItem('playerName1', username1);
         localStorage.setItem('playerName2', username2);
@@ -52,7 +52,7 @@ const Page = () => {
                                     id="username1" onChange={handleChange1} type="text" placeholder="Enter Name"/>
                                 <div onClick={handleClick} id='player1'
 
-                                                             className='w-full bg-gray-200 shadow-amber-100 flex flex-col p-4 my-4 rounded-lg text-white border bg-white duration-200 hover:scale-105'>
+                                     className='w-full bg-gray-200 shadow-amber-100 flex flex-col p-4 my-4 rounded-lg text-white border bg-white duration-200 hover:scale-105'>
                                     <h3 className='text-4xl font-bold text-center py-4 text-yellow-500'>Player 1</h3>
                                     <div
                                         className='w-full bg-gray-200 shadow-amber-100 flex flex-col p-4 my-4 rounded-lg text-white border bg-white duration-200'>

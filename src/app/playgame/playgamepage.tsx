@@ -1,6 +1,58 @@
 import React, { useState } from 'react';
 
 // ONLY FOR THE USE OF NOTES!!!
+// Vertical gameboard
+const renderGameBoard = () => {
+    const gameBoard = [];
+
+    for (let layer = 0; layer < 4; layer++) {
+        const layerElement = (
+            <div className="grid-container mb-10" key={layer}>
+                {(() => {
+                    const rows = [];
+                    for (let row = 0; row < 4; row++) {
+                        const cells = [];
+                        for (let col = 0; col < 4; col++) {
+                            const player = board[layer][row][col];
+                            const cellColor = getPlayerColor(player);
+                            const id = `${layer}-${row}-${col}`; // Generate the id for the image
+                            const cell = (
+                                <div className="cell" key={id}>
+                                    <img
+                                        id={id}
+                                        src={cellColor}
+                                        className="w-14"
+                                        onClick={() => handleCellClick(layer, row, col)} // Pass the id to the click handler
+                                    />
+                                </div>
+                            );
+                            cells.push(cell);
+                        }
+                        const rowElement = (
+                            <div className="row" key={`${layer}-${row}`}>
+                                {cells}
+                            </div>
+                        );
+                        rows.push(rowElement);
+                    }
+                    return (
+                        <div className="grid grid-cols-4">
+                            {rows}
+                        </div>
+                    );
+                })()}
+            </div>
+        );
+        gameBoard.push(layerElement);
+    }
+
+    return (
+        <div className="game-board z-10">
+            {gameBoard}
+        </div>
+    );
+};
+
 
 const TicTacToe = () => {
     const initialBoard = Array(4)
