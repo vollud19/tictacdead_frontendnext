@@ -24,7 +24,6 @@ const Page = () => {
     }
 
     const handleClick = (event) => {
-
         router.push('/playgame')
         let id = event.target.id;
         console.log("Die id " + event.currentTarget.id)
