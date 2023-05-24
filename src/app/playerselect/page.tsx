@@ -1,10 +1,11 @@
 "use client"
-import React, {useRef, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import Navbar from "@/components/ui/Navbar";
 import {Button} from "@chakra-ui/react";
 import styles from "@/app/styles/Home.module.css";
 import {router} from "next/client";
 import {useRouter} from "next/navigation";
+import {getUsedPlayers, connectPlayer} from "@/components/javascript/Socket";
 
 const Page = () => {
 
@@ -23,18 +24,25 @@ const Page = () => {
     }
 
     const handleClick = (event) => {
+
         router.push('/playgame')
         let id = event.target.id;
         console.log("Die id " + event.currentTarget.id)
         // Für Websocket
         if (id === 'player1') {
+            connectPlayer(2)
             console.log("Player1 clicked!!!")
         } else {
+            connectPlayer(1)
             console.log("Player2 clicked!!!")
         }
         localStorage.setItem('playerName1', username1);
         localStorage.setItem('playerName2', username2);
     }
+
+    useEffect(() => {
+            getUsedPlayers()
+        });
 
     return (
         <>

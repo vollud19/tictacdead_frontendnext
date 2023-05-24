@@ -12,8 +12,12 @@ import Square from "@/components/ui/Square";
 import {render} from "react-dom";
 
 export default function PlayGame() {
-    let playerName1 = localStorage.getItem('playerName1');
-    let playerName2 = localStorage.getItem('playerName2');
+    let playerName1;
+    let playerName2;
+    if (window !== 'undefined') {
+        playerName1 = localStorage.getItem('playerName1');
+        playerName2 = localStorage.getItem('playerName2');
+    }
     let player1Wins = 0;
     let player2Wins = 0;
     const router = useRouter();
@@ -34,7 +38,8 @@ export default function PlayGame() {
         }
 
     }
-// XYZ Koordinaten!
+
+    // Not needed anymore
     const GameField = ({stageNum}) => {
         return <div className="flex flex-col h-0 ml-3 space-y-[-10px] relative z-10">
             <div className='max-w-[1240px] mx-auto grid md:grid-cols-1 gap-4'>
@@ -70,6 +75,7 @@ export default function PlayGame() {
         </div>
     }
 
+    // XYZ Koordinaten!
     const initialBoard = Array(4)
         .fill(null)
         .map(() =>
@@ -114,7 +120,7 @@ export default function PlayGame() {
 
         for (let layer = 0; layer < 4; layer++) {
             const layerElement = (
-                <div className="grid-container" key={layer}>
+                <div className="grid-container mb-10" key={layer}>
                     {(() => {
                         const rows = [];
                         for (let row = 0; row < 4; row++) {
@@ -161,6 +167,7 @@ export default function PlayGame() {
     };
 
 
+
     return (
         <>
             <Navbar></Navbar>
@@ -169,11 +176,26 @@ export default function PlayGame() {
                     <div
                         className='max-w-[1100px] mt-[-96px] w-full h-screen mx-auto grid md:grid-cols-3 gap-7 text-center flex justify-center'>
                         <div className='flex flex-col p-4 my-4 mt-80'>
-                            Turn: {turnPlayer}
-                            <p>{playerName1}</p>
-                            <p>{playerName2}</p>
-                            <p>{player1Wins}</p>
-                            <p>{player2Wins}</p>
+                            <div
+                                className='text-yellow-700 w-[200px] h-8 rounded-md font-medium mx-auto md:mx-0'>
+                                Turn: {turnPlayer}
+                            </div>
+                            <div
+                                className='text-yellow-700 w-[200px] h-8 rounded-md font-medium mx-auto md:mx-0'>
+                                {playerName1}
+                            </div>
+                            <div
+                                className='text-yellow-700 w-[200px] h-8 rounded-md font-medium mx-auto md:mx-0'>
+                                {playerName2}
+                            </div>
+                            <div
+                                className='text-yellow-700 w-[200px] h-8 rounded-md font-medium mx-auto md:mx-0'>
+                                {player1Wins}
+                            </div>
+                            <div
+                                className='text-yellow-700 w-[200px] h-8 rounded-md font-medium mx-auto md:mx-0'>
+                                {player2Wins}
+                            </div>
                             <Square></Square>
                             <button
                                 className='bg-black text-yellow-700 w-[200px] h-12 rounded-md font-medium my-6 mx-auto md:mx-0 py-3'
