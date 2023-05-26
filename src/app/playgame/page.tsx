@@ -120,7 +120,7 @@ export default function PlayGame() {
 
         for (let layer = 0; layer < 4; layer++) {
             const layerElement = (
-                <div className="grid-container mb-10" key={layer}>
+                <div className="grid-container mb-20 ml-20 w-[200px]" key={layer}>
                     {(() => {
                         const rows = [];
                         for (let row = 0; row < 4; row++) {
@@ -149,7 +149,7 @@ export default function PlayGame() {
                             rows.push(rowElement);
                         }
                         return (
-                            <div className="grid grid-cols-4">
+                            <div className="grid grid-cols-4 rotate-45" style={{margin: '0'}}>
                                 {rows}
                             </div>
                         );
@@ -165,7 +165,6 @@ export default function PlayGame() {
             </div>
         );
     };
-
 
 
     return (

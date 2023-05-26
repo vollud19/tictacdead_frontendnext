@@ -48,7 +48,7 @@ const Page = () => {
             <Navbar></Navbar>
             <div id="about" className='w-full h-screen px-4 bg-black'>
                 <div className='max-w-[1200px] h-screen mx-auto grid md:grid-cols-1 text-center'>
-                    <div className="w-full bg-gray-100 shadow-amber-100 flex flex-col  rounded-lg text-white
+                    <div className="w-full bg-gray-100 shadow-amber-100 flex flex-col rounded-lg text-white
                         duration-200 bg-gradient-to-r from-[#252B24] to-[#000300]">
                         <div
                             className='grid md:grid-cols-2 w-full bg-gray-100 shadow-amber-100 flex flex-col p-4 my-4 rounded-lg text-white
