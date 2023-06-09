@@ -3,7 +3,7 @@
 */
 
 "use client"
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import Link from "next/link";
 import Navbar from '../../components/ui/Navbar'
 import Typed from "react-typed";
@@ -53,13 +53,6 @@ export default function PlayGame() {
 
     const handleClick = () => {
         // This is to change the players turns, player 1 starts
-        if (turnPlayer === playerName1) {
-            setTurnPlayer(playerName2);
-            setTurnObject('/BtnYellow.svg');
-        } else {
-            setTurnPlayer(playerName1);
-            setTurnObject('/BtnRed.svg');
-        }
 
     }
 
@@ -86,6 +79,7 @@ export default function PlayGame() {
             setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X');
             console.log(layer + '' + row + '' + col)
             handleClick()
+
         } else {
             alert("Already filled!")
         }
@@ -113,7 +107,9 @@ export default function PlayGame() {
         }
     };
 
-
+    // Gameboard frontend
+    // Loop through the 4 layers the 4 rows and 4 cols, then place a cell on each iteration and give the cell a coordinate
+    // based on the layer row and col (000, 001, 100, 110...)
     const renderGameBoard = () => {
         const gameBoard = [];
 
@@ -206,7 +202,7 @@ export default function PlayGame() {
                             </button>
                             <button
                                 className='bg-black text-yellow-700 w-[200px] h-12 rounded-md font-medium my-6 mx-auto md:mx-0 py-3'
-                                onClick={() => router.push('/')}>Exit
+                                onClick={() => handleExit()}>Exit
                             </button>
                         </div>
                         <div

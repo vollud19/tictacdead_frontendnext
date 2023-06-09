@@ -1,13 +1,13 @@
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs'
 
-const BASE_URL = 'http://127.0.0.1:8080'
+const BASE_URL = 'http://192.168.253.241:8080'
 
 
 // getUsedPlayers, connectPlayer, sendMessage, showMessage, dummyWin, dummyLoose, disconnect
 var stompClient = null;
 
-var player;
+export var player;
 
 export function getUsedPlayers(){
     var socket = new SockJS(BASE_URL+'/connections');
@@ -32,6 +32,8 @@ export function getUsedPlayers(){
         .then(result => setLobbyConnected(result.player1, result.player2))
         .catch(error => console.log('error', error));
 }
+
+
 
 export function connectPlayer(playernum) {
     disconnectFromLobby();
@@ -64,8 +66,9 @@ export function connectPlayer(playernum) {
 
 }
 
-export function sendMessage() {
-    //stompClient.send(BASE_URL+"/app/player", {}, JSON.stringify({'xyz': $("#message").val(), 'player': player}));
+export function sendMessage(layer, row, col){
+    const message = col+''+row+''+layer
+    stompClient.send("/app/player", {}, JSON.stringify({'xyz': message.valueOf(), 'player': player}));
 }
 
 export function showMessage(message) {
@@ -96,10 +99,10 @@ export function showMessage(message) {
         }
         else if (message.x == -2 && message.y == 0 && message.z == 0){
             if (player != message.player){
-                dummyLoose()
+                // dummyLoose()
             }
             else{
-                dummyWin()
+                // dummyWin()
             }
         }
     }
