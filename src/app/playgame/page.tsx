@@ -17,6 +17,9 @@ import {render} from "react-dom";
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 import {disconnect, getUsedPlayers, sendMessage, player} from "@/components/javascript/Socket";
+import useSound from 'use-sound'
+// eslint-disable-next-line react-hooks/rules-of-hooks
+let audio = new Audio("DarkMusic.mp3");
 
 // The gameboard implementation of the TicTacDead game (actual game)
 export default function PlayGame() {
@@ -51,9 +54,24 @@ export default function PlayGame() {
         }
     }, [turnPlayer]);
 
+    useEffect(() => {
+        audio.play();
+    })
+
     const handleClick = () => {
         // This is to change the players turns, player 1 starts
 
+    }
+
+    let cnt = 0;
+    const muteAudio = () => {
+        if (cnt == 0) {
+            audio.pause();
+            cnt++;
+        } else if (cnt == 1) {
+            audio.play();
+            cnt = 0;
+        }
     }
 
     // We work with XYZ Coordinates so the backend does the wincheck based on the placement and uses coordinates for that
@@ -93,6 +111,8 @@ export default function PlayGame() {
     // If we want to exit the game, we get back to the homescreen and disconnect from the Websocket
     const handleExit = () => {
         router.push('/')
+        audio.pause();
+        audio.currentTime = 0;
         disconnect()
     }
 
@@ -174,7 +194,7 @@ export default function PlayGame() {
                 <div className='bg-black/50'>
                     <div
                         className='max-w-[1220px] mt-[-96px] w-full h-screen mx-auto grid md:grid-cols-3 gap-7 text-center flex justify-center'>
-                        <div className='flex flex-col p-4 my-4 mt-80'>
+                        <div className='flex flex-col p-4 my-4 mt-56'>
                             <div
                                 className='text-yellow-700 w-[200px] h-8 rounded-md font-medium mx-auto md:mx-0 font-redundead md:text-3xl mb-5'>
                                 Turn: {turnPlayer}
@@ -196,6 +216,10 @@ export default function PlayGame() {
                                 {player2Wins}
                             </div>
                             <Square></Square>
+                            <button
+                                className='bg-black text-yellow-700 w-[200px] h-12 rounded-md font-medium my-6 mx-auto md:mx-0 py-3'
+                                onClick={() => muteAudio()}>Mute Audio
+                            </button>
                             <button
                                 className='bg-black text-yellow-700 w-[200px] h-12 rounded-md font-medium my-6 mx-auto md:mx-0 py-3'
                                 onClick={() => handleRestart()}>Restart

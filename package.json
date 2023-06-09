@@ -14,6 +14,7 @@
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@fontsource/inter": "^4.5.15",
+    "@madzadev/audio-player": "^1.1.11",
     "@next/font": "^13.3.0",
     "@preline/scrollspy": "^1.3.0",
     "@tailwindcss/aspect-ratio": "^0.4.2",
@@ -26,6 +27,8 @@
     "framer-motion": "^10.12.4",
     "net": "^1.0.2",
     "next": "13.3.0",
+    "next-images": "^1.8.5",
+    "next-transpile-modules": "^10.0.0",
     "postcss": "8.4.21",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -40,11 +43,14 @@
     "stompjs": "^2.3.3",
     "tailwindcss": "^3.3.1",
     "typescript": "5.0.4",
+    "use-sound": "^4.0.1",
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {
     "@types/react-scroll": "^1.8.6",
     "@types/webfontloader": "^1.6.35",
-    "react-router-dom": "^6.10.0"
+    "file-loader": "^6.2.0",
+    "react-router-dom": "^6.10.0",
+    "url-loader": "^4.1.1"
   }
 }
