@@ -1,3 +1,7 @@
+/*
+    Editor: Lucas Vollmann-Oswald
+*/
+
 import React, {useEffect, useState} from 'react'
 import WebFont from 'webfontloader'
 import {Link} from "react-scroll/modules";
@@ -5,11 +9,14 @@ import {useRouter} from 'next/navigation'
 
 import {AiOutlineClose, AiOutlineMenu} from 'react-icons/ai'
 
+
+// This is the component for the Navbar, which gets displayed across all pages
 const Navbar = () => {
     const router = useRouter();
-    const [nav, setNav] = useState(true);
-    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+    const [nav, setNav] = useState(true); // To turn the responsive navabar on and off
+    // to get to know the screenwidth for responsive design
 
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const handleResize = () => {
         console.log(window.innerWidth)
         setScreenWidth(window.innerWidth)
@@ -22,9 +29,6 @@ const Navbar = () => {
     const handleNav = () => {
         setNav(!nav);
     }
-
-    {/*TODO
-    --> Implement Navbar closing when screen adjusts its width*/}
 
     return (
         <div className='flex justify-between items-center h-24 max-w-[1240px] mx-auto px-4 text-white'>

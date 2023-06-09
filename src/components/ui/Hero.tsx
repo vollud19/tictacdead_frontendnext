@@ -1,3 +1,7 @@
+/*
+    Editor: Lucas Vollmann-Oswald
+*/
+
 "use client"
 import React from 'react'
 import Typed from 'react-typed';
@@ -5,6 +9,7 @@ import styles from '../../app/styles/Home.module.css'
 import Link from "next/link";
 import {useRouter} from 'next/navigation'
 
+// Component for Start screen of the Website with appealing description and a start button
 const Home = () => {
     const router = useRouter();
 

@@ -1,3 +1,7 @@
+/*
+    Editor: Lucas Vollmann-Oswald, Franz Koinigg
+*/
+
 "use client"
 import React, {useEffect, useRef, useState} from 'react'
 import Navbar from "@/components/ui/Navbar";
@@ -23,6 +27,7 @@ const Page = () => {
         setUsername2(event.target.value);
     }
 
+    // Handles all events like the click action on a specific card of the player and interactions to the Websocket for the players
     const handleClick = (event) => {
         router.push('/playgame')
         let id = event.target.id;
@@ -30,18 +35,23 @@ const Page = () => {
         // Für Websocket
         if (id === 'player1') {
             connectPlayer(2)
-            console.log("Player1 clicked!!!")
+            console.log("Player1 clicked!")
+            player1 = false;
+            handlePlayer1(player1)
         } else {
             connectPlayer(1)
-            console.log("Player2 clicked!!!")
+            console.log("Player2 clicked!")
+            player2 = false;
+            handlePlayer2(player2)
         }
         localStorage.setItem('playerName1', username1);
         localStorage.setItem('playerName2', username2);
     }
 
     useEffect(() => {
-            getUsedPlayers()
-        });
+        getUsedPlayers()
+        // handlePlayer2(false)
+    }, []);
 
     return (
         <>
@@ -58,8 +68,7 @@ const Page = () => {
                                     className="shadow appearance-none border border-yellow-600 border-2 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                                     id="username1" onChange={handleChange1} type="text" placeholder="Enter Name"/>
                                 <div onClick={handleClick} id='player1'
-
-                                                             className='w-full bg-gray-200 shadow-amber-100 flex flex-col p-4 my-4 rounded-lg text-white border bg-white duration-200 hover:scale-105'>
+                                     className='w-full bg-gray-200 shadow-amber-100 flex flex-col p-4 my-4 rounded-lg text-white border bg-white duration-200 hover:scale-105'>
                                     <h3 className='text-4xl font-bold text-center py-4 text-yellow-500'>Player 1</h3>
                                     <div
                                         className='w-full bg-gray-200 shadow-amber-100 flex flex-col p-4 my-4 rounded-lg text-white border bg-white duration-200'>
@@ -67,7 +76,6 @@ const Page = () => {
                                     </div>
                                     <p className='text-center text-2xl font-medium text-[#000000]'></p>
                                     <div className='py-10 text-[#000000] text-center font-medium'>
-
                                     </div>
                                 </div>
                             </div>
@@ -76,7 +84,7 @@ const Page = () => {
                                     className="shadow appearance-none border-2  border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                                     id="username2" type="text" onChange={handleChange2} placeholder="Enter Name"
                                 />
-                                <div onClick={handleClick} id={'player2'}
+                                <div onClick={handleClick} id='player2'
                                      className='w-full bg-gray-200 shadow-amber-100 flex flex-col p-4 my-4 rounded-lg text-white border bg-white duration-200 hover:scale-105'>
                                     <h3 className='text-4xl font-bold text-center py-4 text-red-600'>Player 2</h3>
                                     <div

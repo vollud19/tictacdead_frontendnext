@@ -1,3 +1,8 @@
+/*
+    Editor: Lucas Vollmann-Oswald
+*/
+
+// Footer
 import React from 'react'
 
 const Footer = () => {

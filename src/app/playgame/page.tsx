@@ -1,17 +1,27 @@
+/*
+    Editor: Lucas Vollmann-Oswald
+*/
+
 "use client"
 import React, {useState} from 'react'
 import Link from "next/link";
 import Navbar from '../../components/ui/Navbar'
-import styles from '../../app/styles/Game.module.css'
 import Typed from "react-typed";
 import {router} from "next/client";
 import {useRouter} from "next/navigation";
+import styles from '../../app/styles/Home.module.css'
 import {TileLayer, FeatureGroup} from "react-leaflet"
 import {EditControl} from "react-leaflet-draw"
 import Square from "@/components/ui/Square";
 import {render} from "react-dom";
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
+import {disconnect, getUsedPlayers, sendMessage, player} from "@/components/javascript/Socket";
 
+// The gameboard implementation of the TicTacDead game (actual game)
 export default function PlayGame() {
+
+    // We get the playerName from the LocalStorgage and display it then on the screen
     let playerName1;
     let playerName2;
     if (window !== 'undefined') {
@@ -24,8 +34,22 @@ export default function PlayGame() {
 
     const [turnPlayer, setTurnPlayer] = useState(playerName1)
     const [turnObject, setTurnObject] = useState('/BtnGrey.svg')
+    const [musicV, setMusicV] = useState(0);
 
     const position: number[][][] = [];
+
+    // Assign the buttons to each player, player 1 gets red player 2 yellow
+    useEffect(() => {
+        if (player == 2) {
+            setTurnPlayer(playerName2);
+            console.log(playerName2)
+            setTurnObject('/BtnYellow.svg');
+        } else {
+            setTurnPlayer(playerName1);
+            console.log(playerName1)
+            setTurnObject('/BtnRed.svg');
+        }
+    }, [turnPlayer]);
 
     const handleClick = () => {
         // This is to change the players turns, player 1 starts
@@ -39,54 +63,21 @@ export default function PlayGame() {
 
     }
 
-    // Not needed anymore
-    const GameField = ({stageNum}) => {
-        return <div className="flex flex-col h-0 ml-3 space-y-[-10px] relative z-10">
-            <div className='max-w-[1240px] mx-auto grid md:grid-cols-1 gap-4'>
-                <img id="00" src={turnObject} className="w-14" onClick={() => handleClick(stageNum, 0)}/>
-            </div>
-            <div className='max-w-[1240px] mx-auto grid md:grid-cols-2 gap-8'>
-                <img id="01" src={turnObject} className="w-14" onClick={() => handleClick(stageNum, 1)}/>
-                <img id="10" src={turnObject} className="w-14" onClick={() => handleClick(stageNum, 2)}/>
-            </div>
-            <div className='max-w-[1240px] mx-auto grid md:grid-cols-3 gap-10'>
-                <img id="02" src="/BtnGrey.svg" className="w-14" onClick={() => handleClick(stageNum, 3)}/>
-                <img id="03" src="/BtnGrey.svg" className="w-14" onClick={() => handleClick(stageNum, 4)}/>
-                <img id="5" src="/BtnGrey.svg" className="w-14" onClick={() => handleClick(stageNum, 5)}/>
-            </div>
-            <div className='max-w-[1240px] mx-auto grid md:grid-cols-4 gap-10'>
-                <img id="6" src="/BtnGrey.svg" className="w-14" onClick={() => handleClick(stageNum, 6)}/>
-                <img id="7" src="/BtnGrey.svg" className="w-14" onClick={() => handleClick(stageNum, 7)}/>
-                <img id="8" src="/BtnGrey.svg" className="w-14" onClick={() => handleClick(stageNum, 8)}/>
-                <img id="9" src="/BtnGrey.svg" className="w-14" onClick={() => handleClick(stageNum, 9)}/>
-            </div>
-            <div className='max-w-[1240px] mx-auto grid md:grid-cols-3 gap-10'>
-                <img id="10" src="/BtnGrey.svg" className="w-14" onClick={() => handleClick(stageNum, 10)}/>
-                <img id="11" src="/BtnGrey.svg" className="w-14" onClick={() => handleClick(stageNum, 11)}/>
-                <img id="12" src="/BtnGrey.svg" className="w-14" onClick={() => handleClick(stageNum, 12)}/>
-            </div>
-            <div className='max-w-[1240px] mx-auto grid md:grid-cols-2 gap-8'>
-                <img id="13" src="/BtnGrey.svg" className="w-14" onClick={() => handleClick(stageNum, 13)}/>
-                <img id="14" src="/BtnGrey.svg" className="w-14" onClick={() => handleClick(stageNum, 14)}/>
-            </div>
-            <div className='max-w-[1240px] mx-auto grid md:grid-cols-1 gap-4'>
-                <img id="15" src="/BtnGrey.svg" className="w-14" onClick={() => handleClick(stageNum, 15)}/>
-            </div>
-        </div>
-    }
-
-    // XYZ Koordinaten!
-    const initialBoard = Array(4)
+    // We work with XYZ Coordinates so the backend does the wincheck based on the placement and uses coordinates for that
+    // First of all we make a blank gameboard we also use that when we want to reset the game
+    const initialBoard = Array(8)
         .fill(null)
         .map(() =>
-            Array(4)
+            Array(8)
                 .fill(null)
-                .map(() => Array(4).fill(null))
+                .map(() => Array(8).fill(null))
         );
 
     const [board, setBoard] = useState(initialBoard);
     const [currentPlayer, setCurrentPlayer] = useState('X');
 
+    // Each time a button (cell) gets clicked we send the coordinates to the websocket which sends them to the backend
+    // If the field is already filled, an alert pops up
     const handleCellClick = (layer, row, col) => {
         if (!board[layer][row][col]) {
             const newBoard = [...board];
@@ -100,10 +91,18 @@ export default function PlayGame() {
         }
     };
 
+    // When we click on the restart button the bord gets filled with blank cells again
     const handleRestart = () => {
         setBoard(initialBoard)
     }
 
+    // If we want to exit the game, we get back to the homescreen and disconnect from the Websocket
+    const handleExit = () => {
+        router.push('/')
+        disconnect()
+    }
+
+    // To get the player's color
     const getPlayerColor = (player) => {
         if (player === 'X') {
             return '/BtnYellow.svg';
@@ -120,40 +119,45 @@ export default function PlayGame() {
 
         for (let layer = 0; layer < 4; layer++) {
             const layerElement = (
-                <div className="grid-container mb-20 ml-20 w-[200px]" key={layer}>
-                    {(() => {
-                        const rows = [];
-                        for (let row = 0; row < 4; row++) {
-                            const cells = [];
-                            for (let col = 0; col < 4; col++) {
-                                const player = board[layer][row][col];
-                                const cellColor = getPlayerColor(player);
-                                const id = `${layer}-${row}-${col}`; // Generate the id for the image
-                                const cell = (
-                                    <div className="cell" key={id}>
-                                        <img
-                                            id={id}
-                                            src={cellColor}
-                                            className="w-14"
-                                            onClick={() => handleCellClick(layer, row, col)} // Pass the id to the click handler
-                                        />
+                <div className="grid-container mb-10" key={layer}>
+                    <div className="board-overlay">
+                        <img className="object-contain absolute w-full"
+                             src="/BlankGameboardSingle.svg" alt=""/>
+                        {(() => {
+                            const rows = [];
+                            for (let row = 0; row < 4; row++) {
+                                const cells = [];
+                                for (let col = 0; col < 4; col++) {
+                                    const player = board[layer][row][col];
+                                    const cellColor = getPlayerColor(player);
+                                    const id = `${layer}-${row}-${col}`;
+                                    const cell = (
+                                        <div className="cell" key={id}>
+                                            <img
+                                                id={id}
+                                                src={cellColor}
+                                                className="xl:w-14 m-[5px] lg:w-[50px] md:w-10 sm:w-8"// Adjust the margin here
+                                                onClick={() => handleCellClick(layer, row, col)}
+                                            />
+                                        </div>
+                                    );
+                                    cells.push(cell);
+                                }
+                                const rowElement = (
+                                    <div className="row" key={`${layer}-${row}`}>
+                                        {cells}
                                     </div>
                                 );
-                                cells.push(cell);
+                                rows.push(rowElement);
                             }
-                            const rowElement = (
-                                <div className="row" key={`${layer}-${row}`}>
-                                    {cells}
+                            return (
+                                <div className="grid grid-cols-4 transform skew-x-[-45deg] xl:max-w-[265px] lg:max-w-[250px] lg:mb-10 md:max-w-[230px] ml-[60px] sm:max-w-[200px]">
+                                    {rows}
                                 </div>
+
                             );
-                            rows.push(rowElement);
-                        }
-                        return (
-                            <div className="grid grid-cols-4 rotate-45" style={{margin: '0'}}>
-                                {rows}
-                            </div>
-                        );
-                    })()}
+                        })()}
+                    </div>
                 </div>
             );
             gameBoard.push(layerElement);
@@ -166,33 +170,33 @@ export default function PlayGame() {
         );
     };
 
-
+    // To see who's turn it is, which players are playing and the restart and exit button
     return (
         <>
             <Navbar></Navbar>
             <div className='text-white gameBackground'>
                 <div className='bg-black/50'>
                     <div
-                        className='max-w-[1100px] mt-[-96px] w-full h-screen mx-auto grid md:grid-cols-3 gap-7 text-center flex justify-center'>
+                        className='max-w-[1220px] mt-[-96px] w-full h-screen mx-auto grid md:grid-cols-3 gap-7 text-center flex justify-center'>
                         <div className='flex flex-col p-4 my-4 mt-80'>
                             <div
-                                className='text-yellow-700 w-[200px] h-8 rounded-md font-medium mx-auto md:mx-0'>
+                                className='text-yellow-700 w-[200px] h-8 rounded-md font-medium mx-auto md:mx-0 font-redundead md:text-3xl mb-5'>
                                 Turn: {turnPlayer}
                             </div>
                             <div
-                                className='text-yellow-700 w-[200px] h-8 rounded-md font-medium mx-auto md:mx-0'>
+                                className='text-yellow-700 w-[200px] h-8 rounded-md font-bold mx-auto md:mx-0 font-mono'>
                                 {playerName1}
                             </div>
                             <div
-                                className='text-yellow-700 w-[200px] h-8 rounded-md font-medium mx-auto md:mx-0'>
+                                className='text-yellow-700 w-[200px] h-8 rounded-md font-bold mx-auto md:mx-0'>
                                 {playerName2}
                             </div>
                             <div
-                                className='text-yellow-700 w-[200px] h-8 rounded-md font-medium mx-auto md:mx-0'>
+                                className='text-yellow-700 w-[200px] h-8 rounded-md font-bold mx-auto md:mx-0'>
                                 {player1Wins}
                             </div>
                             <div
-                                className='text-yellow-700 w-[200px] h-8 rounded-md font-medium mx-auto md:mx-0'>
+                                className='text-yellow-700 w-[200px] h-8 rounded-md font-bold mx-auto md:mx-0'>
                                 {player2Wins}
                             </div>
                             <Square></Square>
@@ -217,8 +221,6 @@ export default function PlayGame() {
                             <div className="mt-80">
                                 <GameField stageNum={2}/>
                             </div>*/}
-
-                            <img className="object-contain mt-[-30px]" src="/BlankGamefield.svg" alt=""/>
                         </div>
                     </div>
                 </div>

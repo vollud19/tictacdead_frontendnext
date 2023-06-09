@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
-
+/*
+    Editor: Lucas Vollmann-Oswald
+*/
 // ONLY FOR THE USE OF NOTES!!!
+
+/*import React, { useState } from 'react';
+
 // Vertical gameboard
 const renderGameBoard = () => {
     const gameBoard = [];
@@ -268,3 +272,4 @@ const renderGameBoard = () => {
 };
 
 export default TicTacToe;
+*/

@@ -1,3 +1,7 @@
+/*
+    Editor: Lucas Vollmann-Oswald
+*/
+
 import React from 'react'
 import Laptop from '../../assets/laptop.jpg'
 import thinking2 from '../../../public/design-thinking.png'

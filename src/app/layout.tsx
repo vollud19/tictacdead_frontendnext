@@ -1,4 +1,8 @@
- import './styles/globals.css'
+/*
+    Editor: Lucas Vollmann-Oswald
+*/
+
+import './styles/globals.css'
 
 export const metadata = {
   title: 'TicTacDead',

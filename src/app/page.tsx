@@ -1,3 +1,7 @@
+/*
+    Editor: Lucas Vollmann-Oswald
+*/
+
 "use client"
 import {Inter} from 'next/font/google'
 import {
@@ -26,8 +30,10 @@ import Description from "@/components/ui/Description";
 import About from "../components/ui/About"
 import Footer from "@/components/ui/Footer";
 
+// For the Homepage
 export default function Home() {
 
+    // This is where all components come together like a puzzle
     return (
         <div>
             <Navbar></Navbar>

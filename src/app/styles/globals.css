@@ -1,3 +1,7 @@
+/*
+    Editor: Lucas Vollmann-Oswald
+*/
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,6 +9,12 @@
 
 @font-face {
     font-family: 'RedUnDead';
+    font-size: smaller;
+    src: url("../../../public/fonts/redundead.ttf");
+}
+
+@font-face {
+    font-family: 'Valium';
     font-size: smaller;
     src: url("../../../public/fonts/redundead.ttf");
 }
@@ -40,6 +50,11 @@ body {
 .font-redundead {
     font-size: 50px;
     font-family: "RedunDead";
+}
+
+div.cell {
+    padding: 0;
+    margin: 0;
 }
 
 /*@media (prefers-color-scheme: dark) {

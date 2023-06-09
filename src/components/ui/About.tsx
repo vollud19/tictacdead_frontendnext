@@ -1,8 +1,13 @@
+/*
+    Editor: Lucas Vollmann-Oswald
+*/
+
 import React from 'react'
 
 // TODO:
 // Insert in extra components and add the custom properties
 
+// Component of the website to display the people who worked on the website / game, with their roles
 function About() {
     return (
         <div id="about" className='w-full h-screen py-[10rem] px-4 bg-black'>
