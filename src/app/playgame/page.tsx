@@ -42,7 +42,7 @@ export default function PlayGame() {
     const position: number[][][] = [];
 
     // Assign the buttons to each player, player 1 gets red player 2 yellow
-    useEffect(() => {
+    /*useEffect(() => {
         if (player == 2) {
             setTurnPlayer(playerName2);
             console.log(playerName2)
@@ -52,7 +52,7 @@ export default function PlayGame() {
             console.log(playerName1)
             setTurnObject('/BtnRed.svg');
         }
-    }, [turnPlayer]);
+    }, [turnPlayer]);*/
 
     useEffect(() => {
         audio.play();
@@ -60,6 +60,13 @@ export default function PlayGame() {
 
     const handleClick = () => {
         // This is to change the players turns, player 1 starts
+        if (turnPlayer === playerName1) {
+            setTurnPlayer(playerName2);
+            setTurnObject('/BtnYellow.svg');
+        } else {
+            setTurnPlayer(playerName1);
+            setTurnObject('/BtnRed.svg');
+        }
 
     }
 

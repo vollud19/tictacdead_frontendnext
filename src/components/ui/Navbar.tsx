@@ -16,17 +16,26 @@ const Navbar = () => {
     const [nav, setNav] = useState(true); // To turn the responsive navabar on and off
     // to get to know the screenwidth for responsive design
 
-    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-    const handleResize = () => {
-        console.log(window.innerWidth)
-        setScreenWidth(window.innerWidth)
-    }
+    const [screenWidth, setScreenWidth] = useState(0);
 
     useEffect(() => {
-        window.addEventListener('resize', handleResize)
-    }, [])
+        const handleResize = () => {
+            setScreenWidth(window.innerWidth);
+        };
 
-    const handleNav = () => {
+        // Add event listener to update screenWidth on window resize
+        window.addEventListener('resize', handleResize);
+
+        // Set initial screenWidth value
+        setScreenWidth(window.innerWidth);
+
+        // Cleanup the event listener on component unmount
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+        const handleNav = () => {
         setNav(!nav);
     }
 
