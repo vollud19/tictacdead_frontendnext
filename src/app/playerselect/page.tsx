@@ -8,9 +8,46 @@ import Navbar from "@/components/ui/Navbar";
 import {Button} from "@chakra-ui/react";
 import styles from "@/app/styles/Home.module.css";
 import {useRouter} from "next/navigation";
-import {getUsedPlayers, connectPlayer, disconnectFromLobby} from "@/components/javascript/Socket";
 import {Simulate} from "react-dom/test-utils";
+// import SockJS from 'sockjs-client'
+// import Stomp from 'stompjs'
+import {connectPlayer, getUsedPlayers} from '@/components/javascript/Socket'
 import play = Simulate.play;
+import {withRouter} from "next/router";
+import PlayGame from "@/app/playgame/page";
+
+
+/*
+       true = not connected
+       false = connected
+     */
+// This is that the card changes its color and can't be clicked anymore by the other player, once one player started his game
+// Franz: Gray out websocket connection
+// We need to place the function out of the default function to call it from the socket.js
+let _playerOne = true;
+let _playerTwo = true;
+// eslint-disable-next-line react-hooks/rules-of-hooks
+
+
+export async function handlePlayer1(cond) {
+    _playerOne = cond;
+    const player1Div = document.getElementById('player1');
+    if (!_playerOne && player1Div) {
+        player1Div.style.backgroundColor = 'black';
+        player1Div.style.pointerEvents = 'none';
+        console.log("_playerOne clicked on select")
+    }
+};
+
+export async function handlePlayer2 (cond){
+    _playerTwo = cond;
+    const player2Div = document.getElementById('player2');
+    if (!_playerTwo && player2Div) {
+        player2Div.style.backgroundColor = 'black';
+        player2Div.style.pointerEvents = 'none';
+        console.log("_playerTwo clicked on select")
+    }
+}
 
 // This is the page for the Player Select Menu. Here the player can choose his name and start the game with his character
 export default function PlayerSelectMenu(){
@@ -19,10 +56,13 @@ export default function PlayerSelectMenu(){
     const [username1, setUsername1] = useState('Player 1');
     const [username2, setUsername2] = useState('Player 2');
 
-    const playerName1 = useRef();
+    const BASE_URL = 'http://192.168.82.241:8080'
 
-    let player1 = true;
-    let player2 = true;
+    const playerName1 = useRef();
+    let stompClient = null;
+    let player = 0;
+
+
 
     const handleChange1 = (event) => {
         setUsername1(event.target.value);
@@ -37,9 +77,8 @@ export default function PlayerSelectMenu(){
        // let id = event.target.id;
       //  console.log("Die id " + event.currentTarget.id)
         // Für Websocket
-        disconnectFromLobby()
-        if (id === 'player1') {
-            connectPlayer(2)
+        //alert(id)
+        if (playerNum == 1) {
             console.log("Player1 clicked!")
             _playerOne = false;
             player = 1
@@ -47,8 +86,10 @@ export default function PlayerSelectMenu(){
             connectPlayer(1)
         } else if (playerNum == 2) {
             console.log("Player2 clicked!")
-            player2 = false;
-            handlePlayer2(player2)
+            player = 2
+            _playerTwo = false;
+            handlePlayer2(_playerTwo)
+            connectPlayer(2)
         }
         localStorage.setItem('playerName1', username1);
         localStorage.setItem('playerName2', username2);
@@ -64,6 +105,36 @@ export default function PlayerSelectMenu(){
         getUsedPlayers()
         // handlePlayer2(false)
     }, []);
+
+
+
+
+
+    /*const getUsedPlayers = async () =>{
+        let socket = new SockJS(BASE_URL+'/connections');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/player/msg', async function (message) {
+                console.log(message.body);
+                await receiveMessage(JSON.parse(message.body));
+            });
+        });
+
+        let requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+        };
+
+        fetch(BASE_URL+"/usedPlayers", requestOptions as RequestInit)
+            .then(response =>  {
+                return response.json();
+            })
+            .then(result => {
+                setLobbyConnected(result.player1, result.player2)
+            })
+            //.catch(error => console.log('error', error));
+    }*/
 
     return (
         <>

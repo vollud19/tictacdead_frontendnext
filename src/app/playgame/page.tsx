@@ -1,5 +1,5 @@
 /*
-    Editor: Lucas Vollmann-Oswald
+    Editor: Lucas Vollmann-Oswald, Franz Koinigg
 */
 
 "use client"
@@ -17,10 +17,13 @@ import Square from "@/components/ui/Square";
 import {render} from "react-dom";
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
-import {disconnect, getUsedPlayers, sendMessage, player} from "@/components/javascript/Socket";
+import {disconnect} from "@/components/javascript/Socket";
 import useSound from 'use-sound'
 // eslint-disable-next-line react-hooks/rules-of-hooks
 let audio = new Audio("DarkMusic.mp3");
+import SockJS from 'sockjs-client'
+import Stomp from 'stompjs'
+
 
 // The gameboard implementation of the TicTacDead game (actual game)
 export default function PlayGame() {
@@ -48,9 +51,14 @@ export default function PlayGame() {
     // We get the playerName from the LocalStorgage and display it then on the screen
     let playerName1;
     let playerName2;
+    let selectedPlayer;
+    let BASE_URL;
     if (window !== 'undefined') {
         playerName1 = localStorage.getItem('playerName1');
         playerName2 = localStorage.getItem('playerName2');
+        selectedPlayer = localStorage.getItem('selectedPlayer')?.valueOf();
+        BASE_URL = localStorage.getItem('BASE_URL');
+        console.log(selectedPlayer);
     }
     let player1Wins = 0;
     let player2Wins = 0;
@@ -63,19 +71,20 @@ export default function PlayGame() {
     const position: number[][][] = [];
 
     // Assign the buttons to each player, player 1 gets red player 2 yellow
-    /*useEffect(() => {
-        if (player == 2) {
-            setTurnPlayer(playerName2);
+    useEffect(() => {
+        if (selectedPlayer == 2) {
+            //setTurnPlayer(playerName2);
             console.log(playerName2)
             setTurnObject('/BtnYellow.svg');
         } else {
-            setTurnPlayer(playerName1);
+            //setTurnPlayer(playerName1);
             console.log(playerName1)
             setTurnObject('/BtnRed.svg');
         }
-    }, [turnPlayer]);*/
+    }, [turnPlayer]);
 
     useEffect(() => {
+        connectPlayer(selectedPlayer)
         audio.play();
     })
 
@@ -83,10 +92,10 @@ export default function PlayGame() {
         // This is to change the players turns, player 1 starts
         if (turnPlayer === playerName1) {
             setTurnPlayer(playerName2);
-            setTurnObject('/BtnYellow.svg');
+            // setTurnObject('/BtnYellow.svg');
         } else {
             setTurnPlayer(playerName1);
-            setTurnObject('/BtnRed.svg');
+            // setTurnObject('/BtnRed.svg');
         }
 
     }
@@ -119,18 +128,24 @@ export default function PlayGame() {
     // If the field is already filled, an alert pops up
     const handleCellClick = (layer, row, col) => {
         if (!board[layer][row][col]) {
+            sendMessage(layer,row, col);
             const newBoard = [...board];
             newBoard[layer][row][col] = currentPlayer;
             setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X');
             setBoard(newBoard);
-            setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X');
-            console.log(layer + '' + row + '' + col)
             handleClick()
-
         } else {
             alert("Already filled!")
         }
     };
+
+    const fillCell = (layer, row, col) =>{
+        const newBoard = [...board];
+        newBoard[layer][row][col] = currentPlayer;
+        setBoard(newBoard);
+        setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X');
+        console.log(layer + '' + row + '' + col)
+    }
 
     // When we click on the restart button the bord gets filled with blank cells again
     const handleRestart = () => {
@@ -139,10 +154,10 @@ export default function PlayGame() {
 
     // If we want to exit the game, we get back to the homescreen and disconnect from the Websocket
     const handleExit = () => {
+        disconnect();
         router.push('/')
         audio.pause();
         audio.currentTime = 0;
-        disconnect()
     }
 
     // To get the player's color
@@ -214,6 +229,91 @@ export default function PlayGame() {
             </div>
         );
     };
+
+    let stompClient = null;
+
+    const connectPlayer= (playernum) =>{
+
+        let socket = new SockJS(BASE_URL+'/connections');
+        stompClient = Stomp.over(socket as WebSocket);
+        stompClient.connect({}, function (frame) {
+            // setConnected(true);
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/player/msg', function (message) {
+                console.log(message.body);
+                receiveMessage(JSON.parse(message.body));
+            });
+            stompClient.send("/app/player", {}, JSON.stringify({"xyz": -203, "player": playernum}));
+        });
+
+        let requestOptions = {
+            method: 'POST',
+            redirect: 'follow'
+        };
+
+        console.log("Connecting to Player: " +playernum);
+
+        fetch(BASE_URL+"/usingPlayer/"+playernum, requestOptions as RequestInit)
+            .then(response => response.text())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
+    }
+
+
+    const sendMessage = (layer, row, col) =>{
+        const message = col+''+row+''+layer
+        const json ={
+            "xyz" : message.valueOf(),
+            "player": 1
+        }
+        if(stompClient != null) {
+            stompClient.send("/app/player", {}, JSON.stringify(json) as String);
+        }else{
+            console.log("socket is not connected!!")
+        }
+    }
+
+    const receiveMessage = (message) => {
+        if (message.x < 0) {
+            if (message.z == 3) {
+                if (message.player == 1) {
+                    // setConnected(false, null);
+                    // handlePlayer(true)
+                } else {
+                    // setConnected(null, false);
+                    // handlePlayer2(true)
+                }
+            } else if (message.z == 2) {
+                if (message.player == 1) {
+                    // setConnected(true, null);
+                    // handlePlayer(false)
+                } else {
+                    // setConnected(null, true);
+                    // handlePlayer2(false)
+                }
+            }
+            if (message.x == -4 && message.y == 0 && message.z == 3 && message.player == selectedPlayer) {
+                /* ToDo: Wrong Placement from this Player */
+                //$("#messages").append("<tr><td>Wrong Placement!</td></tr>");
+                // alert("JS: Wrong Placement!")
+            } else if (message.x == -4 && message.y == 0 && message.z == 3 && message.player != selectedPlayer) {
+                /* ToDo: Wrong Placement from other Player */
+            } else if (message.x == -2 && message.y == 0 && message.z == 0) {
+                if (selectedPlayer != message.player) {
+                    // dummyLoose()
+                } else {
+                    // dummyWin()
+                }
+            }
+        }
+    }
+
+    const disconnect = () => {
+        if (stompClient !== null) {
+            stompClient.disconnect();
+        }
+    }
+
 
     // To see who's turn it is, which players are playing and the restart and exit button
     return (
