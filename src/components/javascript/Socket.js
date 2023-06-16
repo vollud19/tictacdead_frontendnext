@@ -25,11 +25,14 @@ export function getUsedPlayers(){
         redirect: 'follow'
     };
 
+
     fetch(BASE_URL+"/usedPlayers", requestOptions)
         .then(response =>  {
             return response.json();
         })
-        .then(result => setLobbyConnected(result.player1, result.player2))
+        .then(result => {
+            setLobbyConnected(result.player1, result.player2)
+        })
         .catch(error => console.log('error', error));
 }
 
@@ -70,6 +73,7 @@ export function sendMessage(layer, row, col){
     const message = col+''+row+''+layer
     stompClient.send("/app/player", {}, JSON.stringify({'xyz': message.valueOf(), 'player': player}));
 }
+
 
 export function showMessage(message) {
 

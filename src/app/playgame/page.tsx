@@ -4,7 +4,8 @@
 
 "use client"
 import React, {useEffect, useState} from 'react'
-import Link from "next/link";
+
+import {Link} from "react-scroll/modules";
 import Navbar from '../../components/ui/Navbar'
 import Typed from "react-typed";
 import {router} from "next/client";
@@ -23,6 +24,26 @@ let audio = new Audio("DarkMusic.mp3");
 
 // The gameboard implementation of the TicTacDead game (actual game)
 export default function PlayGame() {
+
+    // For the responsive design
+    const [screenWidth, setScreenWidth] = useState(0);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setScreenWidth(window.innerWidth);
+        };
+
+        // Add event listener to update screenWidth on window resize
+        window.addEventListener('resize', handleResize);
+
+        // Set initial screenWidth value
+        setScreenWidth(window.innerWidth);
+
+        // Cleanup the event listener on component unmount
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     // We get the playerName from the LocalStorgage and display it then on the screen
     let playerName1;
@@ -100,6 +121,7 @@ export default function PlayGame() {
         if (!board[layer][row][col]) {
             const newBoard = [...board];
             newBoard[layer][row][col] = currentPlayer;
+            setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X');
             setBoard(newBoard);
             setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X');
             console.log(layer + '' + row + '' + col)
@@ -159,7 +181,7 @@ export default function PlayGame() {
                                             <img
                                                 id={id}
                                                 src={cellColor}
-                                                className="xl:w-14 m-[5px] lg:w-[50px] md:w-10 sm:w-8"// Adjust the margin here
+                                                className="xl:w-14 m-[5px] lg:w-14 m-[5px] md:w-10 sm:w-8"// Adjust the margin here, and the cell size
                                                 onClick={() => handleCellClick(layer, row, col)}
                                             />
                                         </div>
@@ -196,43 +218,53 @@ export default function PlayGame() {
     // To see who's turn it is, which players are playing and the restart and exit button
     return (
         <>
-            <Navbar></Navbar>
+            <div className='flex justify-between items-center h-24 max-w-[1240px] mx-auto px-4 text-white'>
+                <div>{screenWidth}</div>
+                <h1 onClick={() => router.push("/")} className='w-full font-redundead md:text-4xl sm:text-2xl text-2xl font-bold text-yellow-700'>TIC·TAC·<span className='text-red-950'>Dead</span></h1>
+                <ul className='hidden md:flex'> {/*}when collapsing the navbar on the top which would also collapse hides*/}
+                    <li className='p-2'>
+                        <button onClick={() => handleExit()}
+                                className="whitespace-nowrap break-keep bg-black text-yellow-700 hover:bg-gray-100 font-semibold py-2 px-10 rounded shadow">
+                            HOME
+                        </button></li>
+                </ul>
+            </div>
             <div className='text-white gameBackground'>
                 <div className='bg-black/50'>
                     <div
                         className='max-w-[1220px] mt-[-96px] w-full h-screen mx-auto grid md:grid-cols-3 gap-7 text-center flex justify-center'>
                         <div className='flex flex-col p-4 my-4 mt-56'>
                             <div
-                                className='text-yellow-700 w-[200px] h-8 rounded-md font-medium mx-auto md:mx-0 font-redundead md:text-3xl mb-5'>
+                                className='text-yellow-700 w-[250px] h-8 rounded-md font-medium mx-auto md:mx-0 font-redundead md:text-3xl mb-5'>
                                 Turn: {turnPlayer}
                             </div>
                             <div
-                                className='text-yellow-700 w-[200px] h-8 rounded-md font-bold mx-auto md:mx-0 font-mono'>
+                                className='text-yellow-700 w-[250px] h-8 rounded-md font-bold mx-auto md:mx-0 font-mono'>
                                 {playerName1}
                             </div>
                             <div
-                                className='text-yellow-700 w-[200px] h-8 rounded-md font-bold mx-auto md:mx-0'>
+                                className='text-yellow-700 w-[250px] h-8 rounded-md font-bold mx-auto md:mx-0'>
                                 {playerName2}
                             </div>
                             <div
-                                className='text-yellow-700 w-[200px] h-8 rounded-md font-bold mx-auto md:mx-0'>
+                                className='text-yellow-700 w-[250px] h-8 rounded-md font-bold mx-auto md:mx-0'>
                                 {player1Wins}
                             </div>
                             <div
-                                className='text-yellow-700 w-[200px] h-8 rounded-md font-bold mx-auto md:mx-0'>
+                                className='text-yellow-700 w-[250px] h-8 rounded-md font-bold mx-auto md:mx-0'>
                                 {player2Wins}
                             </div>
                             <Square></Square>
                             <button
-                                className='bg-black text-yellow-700 w-[200px] h-12 rounded-md font-medium my-6 mx-auto md:mx-0 py-3'
+                                className='bg-black text-yellow-700 w-[250px] h-12 rounded-md font-medium my-6 mx-auto md:mx-0 py-3'
                                 onClick={() => muteAudio()}>Mute Audio
                             </button>
                             <button
-                                className='bg-black text-yellow-700 w-[200px] h-12 rounded-md font-medium my-6 mx-auto md:mx-0 py-3'
+                                className='bg-black text-yellow-700 w-[250px] h-12 rounded-md font-medium my-6 mx-auto md:mx-0 py-3'
                                 onClick={() => handleRestart()}>Restart
                             </button>
                             <button
-                                className='bg-black text-yellow-700 w-[200px] h-12 rounded-md font-medium my-6 mx-auto md:mx-0 py-3'
+                                className='bg-black text-yellow-700 w-[250px] h-12 rounded-md font-medium my-6 mx-auto md:mx-0 py-3'
                                 onClick={() => handleExit()}>Exit
                             </button>
                         </div>
