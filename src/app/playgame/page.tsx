@@ -18,7 +18,7 @@ import Square from "@/components/ui/Square";
 import {render} from "react-dom";
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
-import {disconnect} from "@/components/javascript/Socket";
+import {disconnect, connectPlayer, sendMessage, getUsedPlayers} from "@/components/javascript/Socket";
 import useSound from 'use-sound'
 // eslint-disable-next-line react-hooks/rules-of-hooks
 let audio = new Audio("DarkMusic.mp3");
@@ -49,7 +49,7 @@ export default function PlayGame() {
         };
     }, []);
 
-    // We get the playerName from the LocalStorgage and display it then on the screen
+    // We get the playerName from the LocalStorage and display it then on the screen
     let playerName1;
     let playerName2;
     let BASE_URL;
@@ -132,8 +132,9 @@ export default function PlayGame() {
     // If the field is already filled, an alert pops up
     const handleCellClick = (layer, row, col) => {
         if (!board[layer][row][col]) {
-            console.log(layer + '' + row + '' + col)
-            sendMessage(layer, row, col);
+            handleClick()
+            //console.log(layer + '' + row + '' + col)
+            sendMessage(layer, row, col, selectedPlayer);
             const newBoard = [...board];
             newBoard[layer][row][col] = currentPlayer;
             setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X');
@@ -164,6 +165,7 @@ export default function PlayGame() {
 
     // If we want to exit the game, we get back to the homescreen and disconnect from the Websocket
     const handleExit = () => {
+        sendMessage(0,1,-4)
         disconnect();
         router.push('/')
         audio.pause();
@@ -252,7 +254,6 @@ export default function PlayGame() {
             // setConnected(true);
             console.log('Connected: ' + frame);
             stompClient.subscribe('/player/msg', function (message) {
-                console.log(message.body);
                 receiveMessage(JSON.parse(message.body));
             });
             stompClient.send("/app/player", {}, JSON.stringify({"xyz": -203, "player": playernum}));
@@ -269,10 +270,9 @@ export default function PlayGame() {
             .then(response => response.text())
             .then(result => console.log(result))
             .catch(error => console.log('error', error));
-    }
+    }*/
 
-
-    const sendMessage = (layer, row, col) =>{
+    /*const sendMessage = (layer, row, col) =>{
         const message = col+''+row+''+layer
         const json ={
             "xyz" : message.valueOf(),
@@ -283,7 +283,7 @@ export default function PlayGame() {
         }else{
             console.log("socket is not connected!!")
         }
-    }
+    }*/
 
     const receiveMessage = (message) => {
         if (message.x < 0) {
@@ -320,11 +320,11 @@ export default function PlayGame() {
         }
     }
 
-    const disconnect = () => {
+    /*const disconnect = () => {
         if (stompClient !== null) {
             stompClient.disconnect();
         }
-    }
+    }*/
 
 
     // To see who's turn it is, which players are playing and the restart and exit button
