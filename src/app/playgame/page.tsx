@@ -29,6 +29,7 @@ import Stomp from 'stompjs'
 // The gameboard implementation of the TicTacDead game (actual game)
 export default function PlayGame() {
     const [selectedPlayer, setSelectedPlayer] = useState(1);
+    const [oldSelectedPlayer, setOldSelectedPlayer] = useState(1);
     // For the responsive design
     const [screenWidth, setScreenWidth] = useState(0);
 
@@ -96,9 +97,11 @@ export default function PlayGame() {
         // This is to change the players turns, player 1 starts
         if (turnPlayer === playerName1) {
             setTurnPlayer(playerName2);
+            setOldSelectedPlayer(selectedPlayer)
             // setTurnObject('/BtnYellow.svg');
         } else {
             setTurnPlayer(playerName1);
+            setOldSelectedPlayer(selectedPlayer)
             // setTurnObject('/BtnRed.svg');
         }
 
@@ -157,6 +160,7 @@ export default function PlayGame() {
     const handleRestart = () => {
         setBoard(initialBoard)
         sendMessage(0,1,-4, selectedPlayer)
+        setSelectedPlayer(oldSelectedPlayer);
         disconnect();
         getUsedPlayers();
         connectPlayer(1)
@@ -165,7 +169,7 @@ export default function PlayGame() {
 
     // If we want to exit the game, we get back to the homescreen and disconnect from the Websocket
     const handleExit = () => {
-        sendMessage(0,1,-4)
+        sendMessage(0,1,-4, selectedPlayer)
         disconnect();
         router.push('/')
         audio.pause();
