@@ -1,6 +1,7 @@
 /*
-    Editor: Lucas Vollmann-Oswald
-*/
+    Author: Lucas Vollmann-Oswald
+    TICTACDEAD
+ */
 
 import './styles/globals.css'
 

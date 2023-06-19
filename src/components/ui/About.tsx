@@ -1,6 +1,7 @@
 /*
-    Editor: Lucas Vollmann-Oswald
-*/
+    Author: Lucas Vollmann-Oswald
+    TICTACDEAD
+ */
 
 import React from 'react'
 

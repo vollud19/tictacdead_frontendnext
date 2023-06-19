@@ -1,5 +1,6 @@
 /*
-    Editor: Lucas Vollmann-Oswald, Franz Koinigg
+    Author: Lucas Vollmann-Oswald, Franz Koinigg
+    TICTACDEAD
 */
 
 "use client"
@@ -27,7 +28,7 @@ import Stomp from 'stompjs'
 
 // The gameboard implementation of the TicTacDead game (actual game)
 export default function PlayGame() {
-
+    const [selectedPlayer, setSelectedPlayer] = useState(1);
     // For the responsive design
     const [screenWidth, setScreenWidth] = useState(0);
 
@@ -51,12 +52,11 @@ export default function PlayGame() {
     // We get the playerName from the LocalStorgage and display it then on the screen
     let playerName1;
     let playerName2;
-    let selectedPlayer;
     let BASE_URL;
     if (window !== 'undefined') {
         playerName1 = localStorage.getItem('playerName1');
         playerName2 = localStorage.getItem('playerName2');
-        selectedPlayer = localStorage.getItem('selectedPlayer')?.valueOf();
+        //selectedPlayer = localStorage.getItem('selectedPlayer')?.valueOf();
         BASE_URL = localStorage.getItem('BASE_URL');
         console.log(selectedPlayer);
     }
@@ -65,10 +65,12 @@ export default function PlayGame() {
     const router = useRouter();
 
     const [turnPlayer, setTurnPlayer] = useState(playerName1)
+
     const [turnObject, setTurnObject] = useState('/BtnGrey.svg')
     const [musicV, setMusicV] = useState(0);
 
     const position: number[][][] = [];
+
 
     // Assign the buttons to each player, player 1 gets red player 2 yellow
     useEffect(() => {
@@ -76,10 +78,12 @@ export default function PlayGame() {
             //setTurnPlayer(playerName2);
             console.log(playerName2)
             setTurnObject('/BtnYellow.svg');
+            setSelectedPlayer(1);
         } else {
             //setTurnPlayer(playerName1);
             console.log(playerName1)
             setTurnObject('/BtnRed.svg');
+            setSelectedPlayer(2);
         }
     }, [turnPlayer]);
 
@@ -134,23 +138,28 @@ export default function PlayGame() {
             newBoard[layer][row][col] = currentPlayer;
             setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X');
             setBoard(newBoard);
-            handleClick()
+
         } else {
             alert("Already filled!")
         }
     };
 
+    // Websocket fill?
     const fillCell = (layer, row, col) =>{
         const newBoard = [...board];
         newBoard[layer][row][col] = currentPlayer;
-        setBoard(newBoard);
-        setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X');
-
+      //  setBoard(newBoard);
+       // setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X');
     }
 
     // When we click on the restart button the bord gets filled with blank cells again
     const handleRestart = () => {
         setBoard(initialBoard)
+        sendMessage(0,1,-4, selectedPlayer)
+        disconnect();
+        getUsedPlayers();
+        connectPlayer(1)
+        connectPlayer(2)
     }
 
     // If we want to exit the game, we get back to the homescreen and disconnect from the Websocket

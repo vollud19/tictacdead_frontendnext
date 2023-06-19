@@ -1,6 +1,7 @@
 /*
-    Editor: Lucas Vollmann-Oswald, Franz Koinigg
-*/
+    Author: Lucas Vollmann-Oswald, Franz Koinigg
+    TICTACDEAD
+ */
 
 "use client"
 import React, {useEffect, useRef, useState} from 'react'

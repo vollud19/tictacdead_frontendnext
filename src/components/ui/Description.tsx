@@ -1,6 +1,7 @@
 /*
-    Editor: Lucas Vollmann-Oswald
-*/
+    Author: Lucas Vollmann-Oswald
+    TICTACDEAD
+ */
 
 import React from 'react'
 import Laptop from '../../assets/laptop.jpg'

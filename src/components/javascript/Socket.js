@@ -1,3 +1,8 @@
+/*
+    Author: Franz Koinigg
+    TICTACDEAD
+ */
+
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs'
 import fillCell from 'src/app/playgame/page'
@@ -41,7 +46,7 @@ function handlePlayerOne(cond) {
 
 export var player;
 
-export function getUsedPlayers(){
+export function getUsedPlayers() {
     var socket = new SockJS(BASE_URL+'/connections');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
@@ -99,13 +104,15 @@ export function connectPlayer(playernum) {
 
 }
 
-export function sendMessage(layer, row, col){
+export function sendMessage(layer, row, col, selectedPlayer) {
     const message = col+''+row+''+layer
-    const json ={
+    const json = {
         "xyz" : message.valueOf(),
         "player": 1
     }
-    stompClient.send("/app/player", {}, JSON.stringify(json));
+    console.log("WATCHOUTFORTHIS!")
+    console.log("PlayerNUMBE: " + selectedPlayer)
+    stompClient.send(`/app/player`, {}, JSON.stringify(json));
 }
 
 
@@ -199,12 +206,11 @@ export function dummyLoose(){
     //$("#messages").append("<tr><td>YOU ARE DEAD!</td></tr>");
 }
 
-export function disconnect() {
-    console.log("ASDHAFHDSJLKFHASLJKFHDSJKLFHJKLDSFHDSJKLFHDSJLFHDJSLKFHDJKSFHDSJLKFHDSJKLFHDJKSFHDSJLKFHALLO")
-    stompClient.send(BASE_URL+"/app/player", {}, JSON.stringify({'xyz': -202, 'player': player}));
-    if (stompClient !== null) {
-        stompClient.disconnect();
-    }
+    export function disconnect() {
+        stompClient.send("/app/player", {}, JSON.stringify({'xyz': -202, 'player': player}));
+        if (stompClient !== null) {
+            stompClient.disconnect();
+        }
 
     console.log("Disconnected");
 

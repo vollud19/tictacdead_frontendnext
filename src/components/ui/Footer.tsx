@@ -1,6 +1,7 @@
 /*
-    Editor: Lucas Vollmann-Oswald
-*/
+    Author: Lucas Vollmann-Oswald
+    TICTACDEAD
+ */
 
 // Footer
 import React from 'react'
