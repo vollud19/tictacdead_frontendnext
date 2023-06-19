@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+READ FIRST!
 
 ## Start the App
 
@@ -13,5 +13,9 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## NEXT: Start Websocket
+
+Go into the backend and start the ``` WebsocketApplication.java ```
 
 Then you have to start the backend as well!
