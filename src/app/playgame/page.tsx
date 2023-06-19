@@ -86,7 +86,7 @@ export default function PlayGame() {
     useEffect(() => {
         connectPlayer(selectedPlayer)
         audio.play();
-    })
+    }, [])
 
     const handleClick = () => {
         // This is to change the players turns, player 1 starts
@@ -128,7 +128,8 @@ export default function PlayGame() {
     // If the field is already filled, an alert pops up
     const handleCellClick = (layer, row, col) => {
         if (!board[layer][row][col]) {
-            sendMessage(layer,row, col);
+            console.log(layer + '' + row + '' + col)
+            sendMessage(layer, row, col);
             const newBoard = [...board];
             newBoard[layer][row][col] = currentPlayer;
             setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X');
@@ -144,7 +145,7 @@ export default function PlayGame() {
         newBoard[layer][row][col] = currentPlayer;
         setBoard(newBoard);
         setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X');
-        console.log(layer + '' + row + '' + col)
+
     }
 
     // When we click on the restart button the bord gets filled with blank cells again
@@ -230,7 +231,9 @@ export default function PlayGame() {
         );
     };
 
-    let stompClient = null;
+
+    // WEBSOCKET CONNECTION
+    /*let stompClient = null;
 
     const connectPlayer= (playernum) =>{
 

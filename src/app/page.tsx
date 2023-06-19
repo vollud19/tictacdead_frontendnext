@@ -33,6 +33,8 @@ import Footer from "@/components/ui/Footer";
 // For the Homepage
 export default function Home() {
 
+
+
     // This is where all components come together like a puzzle
     return (
         <div>

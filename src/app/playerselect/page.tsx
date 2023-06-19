@@ -28,7 +28,6 @@ let _playerOne = true;
 let _playerTwo = true;
 // eslint-disable-next-line react-hooks/rules-of-hooks
 
-
 export async function handlePlayer1(cond) {
     _playerOne = cond;
     const player1Div = document.getElementById('player1');
@@ -97,17 +96,11 @@ export default function PlayerSelectMenu(){
         router.push("/playgame")
     }
 
-
-
-
-    // To make the one player field grey out once one is pressed
+    // Websocket connection (this is where the error starts)
     useEffect(() => {
         getUsedPlayers()
         // handlePlayer2(false)
     }, []);
-
-
-
 
 
     /*const getUsedPlayers = async () =>{
