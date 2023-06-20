@@ -19,17 +19,18 @@ import PlayGame from "@/app/playgame/page";
 
 
 /*
-       true = not connected
-       false = connected
-     */
+   true = not connected
+   false = connected
+ */
+
 // This is that the card changes its color and can't be clicked anymore by the other player, once one player started his game
 // Franz: Gray out websocket connection
 // We need to place the function out of the default function to call it from the socket.js
 let _playerOne = true;
 let _playerTwo = true;
-// eslint-disable-next-line react-hooks/rules-of-hooks
 
-export async function handlePlayer1(cond) {
+// eslint-disable-next-line react-hooks/rules-of-hooks
+function handlePlayer1(cond: any) {
     _playerOne = cond;
     const player1Div = document.getElementById('player1');
     if (!_playerOne && player1Div) {
@@ -39,7 +40,7 @@ export async function handlePlayer1(cond) {
     }
 };
 
-export async function handlePlayer2 (cond){
+function handlePlayer2(cond: any) {
     _playerTwo = cond;
     const player2Div = document.getElementById('player2');
     if (!_playerTwo && player2Div) {
@@ -50,40 +51,34 @@ export async function handlePlayer2 (cond){
 }
 
 // This is the page for the Player Select Menu. Here the player can choose his name and start the game with his character
-export default function PlayerSelectMenu(){
+export default function PlayerSelectMenu() {
     const router = useRouter();
 
+    // To display the usernames
     const [username1, setUsername1] = useState('Player 1');
     const [username2, setUsername2] = useState('Player 2');
 
-    const BASE_URL = 'http://192.168.82.241:8080'
-
-    const playerName1 = useRef();
-    let stompClient = null;
+    //const BASE_URL = 'http://192.168.82.241:8080'
     let player = 0;
 
-
-
-    const handleChange1 = (event) => {
+    // If you type in the textfield the value gets automatically updated
+    const handleChange1 = (event: any) => {
         setUsername1(event.target.value);
     }
 
-    const handleChange2 = (event) => {
+    const handleChange2 = (event: any) => {
         setUsername2(event.target.value);
     }
 
-    // Handles all events like the click action on a specific card of the player and interactions to the Websocket for the players
-    const handleClick = (playerNum) => {
-       // let id = event.target.id;
-      //  console.log("Die id " + event.currentTarget.id)
+    // Handles all events like the click action on a specific card of the player and interactions to the Websocket for the players (connect each Player)
+    const handleClick = (playerNum: any) => {
         // Für Websocket
-        //alert(id)
         if (playerNum == 1) {
             console.log("Player1 clicked!")
             _playerOne = false;
             player = 1
-            handlePlayer1(_playerOne)
-            connectPlayer(1)
+            handlePlayer1(_playerOne);
+            connectPlayer(1);
         } else if (playerNum == 2) {
             console.log("Player2 clicked!")
             player = 2
@@ -91,9 +86,11 @@ export default function PlayerSelectMenu(){
             handlePlayer2(_playerTwo)
             connectPlayer(2)
         }
+        // For playerNames in the playgame and the cntStart is used for the restart Functionality
         localStorage.setItem('playerName1', username1);
         localStorage.setItem('playerName2', username2);
         localStorage.setItem('selectedPlayer', player.toString());
+        localStorage.setItem('cntStart', "1");
         router.push("/playgame")
     }
 

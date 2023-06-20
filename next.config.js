@@ -1,8 +1,16 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+module.exports = {
   experimental: {
     appDir: true,
+    generateStaticParams: true
   },
-}
+  generateStaticParams: async function () {
+    // Exclude specific pages from being exported
+    const staticParams = {
+      '/playerselect': { page: '/playerselect' },
+      '/playgame': { page: '/playgame' },
+    };
 
-module.exports = nextConfig
+    return staticParams;
+  },
+};
