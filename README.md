@@ -1,18 +1,20 @@
 READ FIRST!
 
-## Start the App
+## Start the App (Frontend)
+
+Run ```npm install``` to install all the necessarry packages
 
 First, run the development server:
 
 ```bash
 npm run start
 # or
-yarn dev
-# or
-pnpm dev
+npm run dev -> developer
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+(You maybe need to execute ```next build``` before npm run start)
 
 ## NEXT: Start Websocket
 
