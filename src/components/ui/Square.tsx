@@ -3,7 +3,7 @@
     TICTACDEAD
  */
 
-// Not used anymore (was thought at first for the game buttons)
+// (was thought at first for the game buttons)
 import React from 'react'
 
 const Square = ({value}: any) => {

@@ -6,31 +6,24 @@
 "use client"
 import React, {SetStateAction, useEffect, useState} from 'react'
 
-import {Link} from "react-scroll/modules";
-import Navbar from '../../components/ui/Navbar'
-import Typed from "react-typed";
-import {router} from "next/client";
 import {useRouter} from "next/navigation";
-import styles from '../../app/styles/Home.module.css'
-import {TileLayer, FeatureGroup} from "react-leaflet"
-import {EditControl} from "react-leaflet-draw"
-import Square from "@/components/ui/Square";
-import {render} from "react-dom";
 import {disconnect, connectPlayer, sendMessage, getUsedPlayers, setInitialWins} from "@/components/javascript/Socket";
 import {winCnt1, winCnt2} from "@/components/javascript/Socket";
-import useSound from 'use-sound'
 // eslint-disable-next-line react-hooks/rules-of-hooks
 
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs'
+let audio: HTMLAudioElement;
+if(typeof Audio != "undefined") {
+    audio = new Audio("DarkMusic.mp3");
+}
 
-const audio = new Audio("DarkMusic.mp3");
 
 // The gameboard implementation of the TicTacDead game (actual game)
 export default function PlayGame() {
     // We get the playerName from the LocalStorage and display it then on the screen
-    let playerName1: any = "player1";
-    let playerName2: any = "player2";
+    let playerName1: any = "Player1";
+    let playerName2: any = "Player2";
     // See who's players turn it is
     const [turnPlayer, setTurnPlayer] = useState(playerName1)
     // To change the placement of the buttons (Color of Player 1 or Player 2)
@@ -65,12 +58,14 @@ export default function PlayGame() {
 
     // Get the data from the local Storage (The names we set in the Playerselect page)
     let BASE_URL: string | null;
-    if (window !== undefined) {
+    if (typeof window !== 'undefined') {
         playerName1 = localStorage.getItem('playerName1');
         playerName2 = localStorage.getItem('playerName2');
         // selectedPlayer = localStorage.getItem('selectedPlayer')?.valueOf();
         BASE_URL = localStorage.getItem('BASE_URL');
         console.log(selectedPlayer);
+    } else {
+        console.log("Server side")
     }
 
     // To set the initial player (Player 1)
@@ -80,6 +75,7 @@ export default function PlayGame() {
         if (typeof Audio !== 'undefined') {
             audio.play();
         }
+        //alert("Press Start before you play!");
     }, [])
 
     // Part of the audio Player
@@ -97,12 +93,12 @@ export default function PlayGame() {
     // Assign the buttons to each player, player 1 gets red player 2 yellow
     useEffect(() => {
         if (selectedPlayer == 2) {
-            //setTurnPlayer(playerName2);
+            // setTurnPlayer(playerName2);
             console.log(playerName2)
             setTurnObject('/BtnYellow.svg');
             setSelectedPlayer(1);
         } else {
-            //setTurnPlayer(playerName1);
+            // setTurnPlayer(playerName1);
             console.log(playerName1)
             setTurnObject('/BtnRed.svg');
             setSelectedPlayer(2);
@@ -114,13 +110,13 @@ export default function PlayGame() {
         if (turnPlayer === playerName1) {
             if (playerName2 !== null) {
                 setTurnPlayer(playerName2);
-                setOldSelectedPlayer(selectedPlayer)
+                //setOldSelectedPlayer(playerName1)
                 // setTurnObject('/BtnYellow.svg');
             }
         } else {
             if (playerName1 !== null) {
                 setTurnPlayer(playerName1);
-                setOldSelectedPlayer(selectedPlayer)
+                //setOldSelectedPlayer(playerName2)
                 // setTurnObject('/BtnRed.svg');
             }
         }
@@ -170,8 +166,8 @@ export default function PlayGame() {
     const handleRestart = async () => {
         let cntStart = localStorage.getItem('cntStart');
         setBoard(initialBoard)
-        sendMessage(0, 1, -4, selectedPlayer)
-        disconnect();
+        await sendMessage(0, 1, -4, selectedPlayer)
+        await disconnect();
         player1Wins = winCnt1;
         player2Wins = winCnt2;
         await getUsedPlayers();

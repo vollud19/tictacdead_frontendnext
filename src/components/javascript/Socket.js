@@ -13,8 +13,15 @@ import Page from "src/app/playerselect/page";
 import PlayerSelectMenu from "src/app/playerselect/page";
 
 export const BASE_URL = 'http://localhost:8080'
-let audio = new Audio("Audiio_GongPluse.wav");
-let audio2 = new Audio("CreepyLaughter.mp3");
+let audio;
+if(typeof Audio != "undefined") {
+    audio = new Audio("Audiio_GongPluse.wav");
+}
+let audio2;
+if(typeof Audio != "undefined") {
+    audio2 = new Audio("CreepyLaughter.mp3");
+}
+
 export let winCnt1 = 0;
 export let winCnt2 = 0;
 
@@ -125,6 +132,7 @@ export function connectPlayer(playernum) {
 
 }
 
+let selectedPlayerGame;
 // Send the message to the backend which contains the coordinates of the player and the player Number to validate
 export function sendMessage(layer, row, col, selectedPlayer) {
     const message = col + '' + row + '' + layer
@@ -132,6 +140,7 @@ export function sendMessage(layer, row, col, selectedPlayer) {
         "xyz": message.valueOf(),
         "player": selectedPlayer
     }
+    selectedPlayerGame = selectedPlayer;
     console.log("Playernumber: " + selectedPlayer)
     stompClient.send(`/app/player`, {}, JSON.stringify(json));
 }
@@ -161,9 +170,10 @@ export const receiveMessage = async (message) => {
         // Wrong placement is handled by the frontend already!
     } else if (message.x === -2 && message.y === 0 && message.z === 0) {
         let msgCnt = 1;
-        if (player == message.player) {
+        if (selectedPlayerGame === 1) {
             // dummyLoose()
             if (msgCnt === 1) {
+                console.log(selectedPlayerGame + " " + message.player + " LOOK AT THIS")
                 await audio.play();
                 await audio2.play();
                 alert("Player " + 1 + " won!");
@@ -182,8 +192,8 @@ export const receiveMessage = async (message) => {
             }
         }
     } else if (message.x === -4 && message.y === 0 && message.z === 9) {
-        await audio.play();
-        alert("It's a draw!")
+        //await audio.play();
+      //  alert("It's a draw!")
     } else {
         // handleCellClick(message.z, message.y, message.x)
         // fillCell(message.z, message.y, message.x)

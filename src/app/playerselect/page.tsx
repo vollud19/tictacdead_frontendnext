@@ -12,7 +12,7 @@ import {useRouter} from "next/navigation";
 import {Simulate} from "react-dom/test-utils";
 // import SockJS from 'sockjs-client'
 // import Stomp from 'stompjs'
-import {connectPlayer, getUsedPlayers} from '@/components/javascript/Socket'
+import {connectPlayer, disconnect, getUsedPlayers} from '@/components/javascript/Socket'
 import play = Simulate.play;
 import {withRouter} from "next/router";
 import PlayGame from "@/app/playgame/page";
@@ -100,32 +100,6 @@ export default function PlayerSelectMenu() {
         // handlePlayer2(false)
     }, []);
 
-
-    /*const getUsedPlayers = async () =>{
-        let socket = new SockJS(BASE_URL+'/connections');
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function (frame) {
-            console.log('Connected: ' + frame);
-            stompClient.subscribe('/player/msg', async function (message) {
-                console.log(message.body);
-                await receiveMessage(JSON.parse(message.body));
-            });
-        });
-
-        let requestOptions = {
-            method: 'GET',
-            redirect: 'follow'
-        };
-
-        fetch(BASE_URL+"/usedPlayers", requestOptions as RequestInit)
-            .then(response =>  {
-                return response.json();
-            })
-            .then(result => {
-                setLobbyConnected(result.player1, result.player2)
-            })
-            //.catch(error => console.log('error', error));
-    }*/
 
     return (
         <>
