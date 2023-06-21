@@ -8,8 +8,6 @@ First, run the development server:
 
 ```bash
 npm run start
-# or
-npm run dev -> developer
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
