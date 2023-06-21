@@ -15,7 +15,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 (You maybe need to execute ```next build``` before npm run start)
 
 
-## Backend
+## Only for Backend
 
 Go into the backend and start the ``` TicTacDeadApplication.java ```
 
