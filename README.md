@@ -18,7 +18,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## NEXT: Start Websocket
 
-Go into the backend and start the ``` WebsocketApplication.java ```
+Go into the backend and start the ``` TicTacDeadApplication.java ```
 
 Then you have to start the backend as well!
 
